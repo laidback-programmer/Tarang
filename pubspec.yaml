@@ -1,0 +1,50 @@
+name: sea_safe
+description: Sea Safe - Ocean hazard reporting and alerts
+publish_to: 'none'
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  file_picker: ^8.1.2
+  flutter_map: ^8.2.1
+  latlong2: ^0.9.1
+  geolocator: ^10.0.1
+  image_picker: ^1.1.1
+  uuid: ^4.3.0
+  fluttertoast: ^8.2.1
+  cached_network_image: ^3.4.1
+  flutter_svg: ^2.0.7
+  shared_preferences: ^2.2.3
+  syncfusion_flutter_charts: ^31.1.20
+  syncfusion_flutter_maps: ^31.1.20
+  flutter_launcher_icons: ^0.14.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+  min_sdk_android: 21
+
+
+  assets:
+    - assets/create.png
+    - assets/emergency.png
+    - assets/home.png
+    - assets/news.png
+    - assets/tips.png
+    - assets/cyclone.jpg
+    - assets/oil_spills.jpg
+    - assets/tsunami.jpg
+    - assets/shipwreck.jpg
+    - assets/sealevel.jpg
+    - assets/logo.png
