@@ -6,8 +6,8 @@ A comprehensive Flutter application for maritime disaster management, enabling c
 
 ### For Citizens
 - **Report Hazards**: Submit maritime incidents with location, photos, and details
-- **Real-time Alerts**: Receive notifications about nearby maritime hazards
-- **News & Updates**: Stay informed about disaster-related news
+- **AI-Powered Disaster News**: Real-time disaster alerts using Gemini AI with web scraping & NLP
+- **Location-Based Alerts**: Get notified about disasters within 500km radius
 - **AI Assistant**: Get AI-powered guidance during emergencies
 - **Emergency SOS**: Quick access to emergency services
 
@@ -48,7 +48,9 @@ flutter pub get
 
 3. Set up Supabase (see [AUTHENTICATION_SETUP.md](AUTHENTICATION_SETUP.md))
 
-4. Run the app
+4. Set up Gemini API (see [GEMINI_SETUP.md](GEMINI_SETUP.md))
+
+5. Run the app
 ```bash
 flutter run
 ```
@@ -60,7 +62,8 @@ flutter run
 - `geolocator` - Location services
 - `image_picker` - Photo uploads
 - `supabase_flutter` - Backend & authentication
-- `http` - API requests
+- `http` - API requests & Gemini AI integration
+- `file_picker` - Media file selection
 
 ## 🗂️ Project Structure
 
@@ -91,8 +94,11 @@ See [AUTHENTICATION_SETUP.md](AUTHENTICATION_SETUP.md) for detailed setup instru
 ## 🌐 API Integration
 
 - **Supabase**: Backend, database, and authentication
-- **NewsAPI** (optional): Disaster-related news feeds
-- **Geocoding**: Location-based services
+- **Gemini AI**: AI-powered disaster news with web scraping & NLP analysis
+- **Geocoding**: Location-based services and reverse geocoding
+- **Real-time Alerts**: Location-based disaster monitoring (500km radius)
+
+See [GEMINI_SETUP.md](GEMINI_SETUP.md) for Gemini API configuration.
 
 ## 🛠️ Development
 
