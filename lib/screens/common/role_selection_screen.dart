@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_strings.dart';
 import '../../core/enums/user_role.dart';
 import '../../core/utils/role_manager.dart';
 import '../../core/utils/storage_util.dart';
-import '../citizen/citizen_home_screen.dart';
+import '../auth/login_screen.dart';
 import '../official/official_dashboard_screen.dart';
 
 class RoleSelectionScreen extends StatefulWidget {
@@ -21,75 +20,91 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
   UserRole? _selectedRole;
   bool _isLoading = false;
 
-  late AnimationController _slideController;
-  late AnimationController _cardController;
-  late Animation<Offset> _slideAnimation;
-  late Animation<double> _cardAnimation;
+  late AnimationController _fadeController;
+  late AnimationController _scaleController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    _slideController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-
-    _cardController = AnimationController(
+    _fadeController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _slideController, curve: Curves.fastOutSlowIn),
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
     );
 
-    _cardAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _cardController, curve: Curves.elasticOut),
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
     );
 
-    Future.delayed(const Duration(milliseconds: 200), () {
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
+    );
+
+    Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) {
-        _slideController.forward();
-        _cardController.forward();
+        _fadeController.forward();
+        _scaleController.forward();
       }
     });
   }
 
   @override
   void dispose() {
-    _slideController.dispose();
-    _cardController.dispose();
+    _fadeController.dispose();
+    _scaleController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: AppColors.lightGray,
+      backgroundColor: const Color(0xFFF5F5F0),
       body: SafeArea(
         child: Stack(
           children: [
-            _buildBackgroundDecoration(),
-
-            // Scrollable content to fix overflow
+            _buildDecorativeElements(),
             SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SlideTransition(position: _slideAnimation, child: _buildHeader()),
-                  const SizedBox(height: 40),
-                  ScaleTransition(scale: _cardAnimation, child: _buildRoleCards()),
-                  const SizedBox(height: 32),
-                  SlideTransition(position: _slideAnimation, child: _buildBottomSection()),
-                ],
+              physics: const BouncingScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight:
+                        size.height - MediaQuery.of(context).padding.top),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0, vertical: 20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: _buildHeader(),
+                      ),
+                      const SizedBox(height: 40),
+                      ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: _buildRoleCards(),
+                      ),
+                      const SizedBox(height: 50),
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: _buildContinueButton(),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
               ),
             ),
-
             if (_isLoading) _buildLoadingOverlay(),
           ],
         ),
@@ -97,49 +112,70 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
     );
   }
 
-  Widget _buildBackgroundDecoration() {
-    return Positioned(
-      top: -100,
-      right: -100,
-      child: Container(
-        width: 200,
-        height: 200,
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            colors: [
-              AppColors.primary.withOpacity(0.1),
-              AppColors.primary.withOpacity(0.05),
-              Colors.transparent,
-            ],
+  Widget _buildDecorativeElements() {
+    return Stack(
+      children: [
+        // Top right decoration
+        Positioned(
+          top: 100,
+          right: -20,
+          child: Transform.rotate(
+            angle: 0.3,
+            child: Icon(
+              Icons.sailing,
+              size: 40,
+              color: AppColors.primary.withOpacity(0.15),
+            ),
           ),
-          shape: BoxShape.circle,
         ),
-      ),
+
+        // Left side decoration
+        Positioned(
+          top: 180,
+          left: -10,
+          child: Icon(
+            Icons.waves,
+            size: 35,
+            color: AppColors.accent.withOpacity(0.12),
+          ),
+        ),
+
+        // Bottom decorations
+        Positioned(
+          bottom: 150,
+          right: 20,
+          child: Transform.rotate(
+            angle: -0.2,
+            child: Icon(
+              Icons.anchor,
+              size: 30,
+              color: AppColors.primaryDark.withOpacity(0.1),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildHeader() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        Text(
-          AppStrings.selectYourRole,
-          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                color: AppColors.primaryDark,
-                fontWeight: FontWeight.w700,
-              ),
-          textAlign: TextAlign.center,
+        RichText(
+          text: TextSpan(
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  color: const Color(0xFF1A1A1A),
+                  fontWeight: FontWeight.w700,
+                  height: 1.2,
+                  letterSpacing: -0.5,
+                ),
+            children: const [
+              TextSpan(text: 'Choose your role\n'),
+              TextSpan(text: 'below'),
+            ],
+          ),
         ),
-        const SizedBox(height: 16),
-        Text(
-          AppStrings.roleSelectionDescription,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppColors.gray,
-                height: 1.5,
-              ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
       ],
     );
   }
@@ -149,28 +185,30 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
       children: [
         _buildRoleCard(
           role: UserRole.citizen,
-          icon: Icons.person_rounded,
-          title: AppStrings.citizenRole,
-          description:
-              "Report hazards, receive alerts, and access emergency services",
-          gradient: const LinearGradient(
-            colors: [AppColors.primary, AppColors.primaryLight],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+          icon: Icons.notifications_active_rounded,
+          title: 'Citizen',
+          subtitle: 'Report maritime hazards\n& receive alerts',
+          color: const Color(0xFF7C3AED),
+          illustration: Icons.person_rounded,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Text(
+            'or',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: const Color(0xFF666666),
+                  fontWeight: FontWeight.w600,
+                ),
+            textAlign: TextAlign.center,
           ),
         ),
-        const SizedBox(height: 20),
         _buildRoleCard(
           role: UserRole.official,
           icon: Icons.admin_panel_settings_rounded,
-          title: AppStrings.officialRole,
-          description:
-              "Manage reports, analyze data, and coordinate emergency responses",
-          gradient: const LinearGradient(
-            colors: [AppColors.accent, AppColors.accentLight],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          title: 'Maritime Official',
+          subtitle: 'Manage reports &\ncoordinate responses',
+          color: const Color(0xFF8B5CF6),
+          illustration: Icons.assessment_rounded,
         ),
       ],
     );
@@ -180,138 +218,197 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
     required UserRole role,
     required IconData icon,
     required String title,
-    required String description,
-    required LinearGradient gradient,
+    required String subtitle,
+    required Color color,
+    required IconData illustration,
   }) {
     final bool isSelected = _selectedRole == role;
+
     return GestureDetector(
       onTap: () => _selectRole(role),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        curve: Curves.fastOutSlowIn,
-        width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        curve: Curves.easeInOut,
+        height: 160,
         decoration: BoxDecoration(
-          gradient: isSelected ? gradient : null,
-          color: isSelected ? null : AppColors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: color,
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isSelected ? Colors.transparent : AppColors.gray.withOpacity(0.2),
-            width: 2,
+            color: isSelected ? const Color(0xFF1A1A1A) : color,
+            width: isSelected ? 3 : 0,
           ),
           boxShadow: [
-            if (isSelected)
-              BoxShadow(
-                color: gradient.colors.first.withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              )
-            else
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              ),
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: isSelected ? 20 : 15,
+              offset: Offset(0, isSelected ? 8 : 6),
+            ),
           ],
         ),
-        child: Column(
+        child: Stack(
           children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: isSelected ? AppColors.white.withOpacity(0.2) : AppColors.lightGray,
-                shape: BoxShape.circle,
+            // Background wave pattern
+            Positioned(
+              right: -30,
+              bottom: -30,
+              child: Icon(
+                Icons.waves,
+                size: 120,
+                color: Colors.white.withOpacity(0.1),
               ),
-              child: Icon(icon, size: 40, color: isSelected ? AppColors.white : AppColors.primary),
             ),
-            const SizedBox(height: 20),
-            Text(
-              title,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(color: isSelected ? AppColors.white : AppColors.primaryDark, fontWeight: FontWeight.w700),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              description,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: isSelected ? AppColors.white.withOpacity(0.9) : AppColors.gray,
-                    height: 1.5,
+
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.95),
+                            fontSize: 14,
+                            height: 1.4,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: isSelected ? 60 : 0,
-              height: 4,
-              decoration: BoxDecoration(
-                color: isSelected ? AppColors.white : Colors.transparent,
-                borderRadius: BorderRadius.circular(2),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      height: 110,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          illustration,
+                          size: 60,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+
+            // Selection indicator
+            if (isSelected)
+              Positioned(
+                top: 12,
+                right: 12,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Icon(
+                    Icons.check,
+                    size: 20,
+                    color: color,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBottomSection() {
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _selectedRole != null ? _handleRoleSelection : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  _selectedRole != null ? AppColors.primary : AppColors.gray.withOpacity(0.3),
-              foregroundColor: AppColors.white,
-              padding: const EdgeInsets.symmetric(vertical: 18),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              elevation: _selectedRole != null ? 8 : 0,
-            ),
-            child: _isLoading
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                    ),
-                  )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Text("Continue"),
-                      SizedBox(width: 8),
-                      Icon(Icons.arrow_forward_rounded, size: 20),
-                    ],
-                  ),
+  Widget _buildContinueButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed: _selectedRole != null ? _handleRoleSelection : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _selectedRole != null
+              ? const Color(0xFF1A1A1A)
+              : const Color(0xFFD0D0D0),
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: const Color(0xFFD0D0D0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
+          elevation: _selectedRole != null ? 4 : 0,
+          shadowColor: Colors.black.withOpacity(0.3),
         ),
-        const SizedBox(height: 16),
-        Text(
-          "You can change your role later in settings",
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.gray.withOpacity(0.8),
-                fontSize: 13,
+        child: _isLoading
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text(
+                    'Get started',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Icon(Icons.arrow_forward_rounded, size: 20),
+                ],
               ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+      ),
     );
   }
 
   Widget _buildLoadingOverlay() {
     return Container(
-      color: Colors.black.withOpacity(0.3),
-      child: const Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+      color: Colors.black.withOpacity(0.4),
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF7C3AED)),
+                strokeWidth: 3,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Setting up your role...',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: const Color(0xFF1A1A1A),
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -320,20 +417,44 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
   void _selectRole(UserRole role) {
     if (_isLoading) return;
     setState(() => _selectedRole = role);
+
+    // Haptic feedback would be nice here
+    // HapticFeedback.lightImpact();
   }
 
   Future<void> _handleRoleSelection() async {
     if (_selectedRole == null || _isLoading) return;
+
     setState(() => _isLoading = true);
 
-    await StorageUtil.saveUserRole(_selectedRole!);
-    await RoleManager.setUserRole(_selectedRole!);
+    try {
+      await StorageUtil.saveUserRole(_selectedRole!);
+      await RoleManager.setUserRole(_selectedRole!);
 
-    final routeName =
-        _selectedRole == UserRole.citizen ? CitizenHomeScreen.routeName : OfficialDashboardScreen.routeName;
+      if (!mounted) return;
 
-    if (!mounted) return;
+      // Maritime Officials go directly to dashboard (no auth required)
+      // Citizens need to login
+      final routeName = _selectedRole == UserRole.official
+          ? OfficialDashboardScreen.routeName
+          : LoginScreen.routeName;
 
-    Navigator.of(context).pushNamedAndRemoveUntil(routeName, (route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        routeName,
+        (route) => false,
+      );
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to set role: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 }

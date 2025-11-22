@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 import '../../live_osm_map.dart';
+import '../../widgets/common/enhanced_ocean_nav.dart';
+import '../../core/constants/nav_items.dart';
 import 'add_report_screen.dart';
 import 'emergency_screen.dart';
 import 'news_screen.dart';
 import 'ai_assistant_screen.dart';
-import 'profile_screen.dart'; // Import the profile screen
+import 'profile_screen.dart';
 
 class CitizenHomeScreen extends StatefulWidget {
   static const String routeName = '/citizen-home';
@@ -37,23 +38,15 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF0A2A57),
       body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: EnhancedOceanBottomNav(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() => _selectedIndex = index),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.article), label: "News"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.add_circle), label: "Report"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.warning), label: "Emergency"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.assistant), label: "Assistant"),
-        ],
+        items: NavItems.citizenItems,
+        backgroundColor: Colors.white,
+        selectedColor: const Color(0xFF0A6FB8),
+        unselectedColor: Colors.grey.shade600,
+        floatingCenterButton: true,
+        centerButtonIndex: 2, // Report button in the center
       ),
     );
   }

@@ -43,3 +43,30 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Development files (not to be committed)
+*.md.backup
+*.md~
+OCEAN_NAV_STATUS.md
+OVERFLOW_FIX_SUMMARY.md
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# API Keys (if stored in separate files)
+api_keys.dart
+secrets.dart
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+
+# Coverage
+coverage/
+*.lcov
+
+# Test related
+test/.test_coverage.dart

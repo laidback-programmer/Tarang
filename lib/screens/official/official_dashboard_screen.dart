@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_strings.dart';
 import '../../widgets/official/stats_card.dart';
+import '../../widgets/common/enhanced_ocean_nav.dart';
+import '../../core/constants/nav_items.dart';
 import 'reports_management_screen.dart';
 import 'analytics_screen.dart';
 import 'alert_management_screen.dart';
@@ -42,30 +44,14 @@ class _OfficialDashboardScreenState extends State<OfficialDashboardScreen> {
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: EnhancedOceanBottomNav(
         currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
         onTap: (index) => setState(() => _currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: 'Reports',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Analytics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.warning),
-            label: 'Alerts',
-          ),
-        ],
+        items: NavItems.officialItems,
+        backgroundColor: Colors.white,
+        selectedColor: const Color(0xFF0A6FB8),
+        unselectedColor: Colors.grey.shade600,
+        floatingCenterButton: false,
       ),
     );
   }

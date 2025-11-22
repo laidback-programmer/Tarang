@@ -1,22 +1,37 @@
 import 'package:flutter/material.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 // Common Screens
 import 'screens/common/intro_screen.dart';
 import 'screens/common/role_selection_screen.dart';
+
+// Auth Screens
+import 'screens/auth/login_screen.dart';
+import 'screens/auth/signup_screen.dart';
+import 'screens/auth/forgot_password_screen.dart';
+
 // Citizen Screens
 import 'screens/citizen/citizen_home_screen.dart';
 import 'screens/citizen/add_report_screen.dart';
 import 'screens/citizen/emergency_screen.dart';
 import 'screens/citizen/news_screen.dart';
 import 'screens/citizen/ai_assistant_screen.dart';
+import 'screens/citizen/profile_screen.dart';
 
-// Official Screens (inside official folder)
+// Official Screens
 import 'screens/official/official_dashboard_screen.dart';
 import 'screens/official/reports_management_screen.dart';
 import 'screens/official/analytics_screen.dart';
 import 'screens/official/alert_management_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Supabase
+  await Supabase.initialize(
+    url: 'https://xnxdswznjmavxoemgtzy.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhueGRzd3puam1hdnhvZW1ndHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDI3NTgsImV4cCI6MjA3NzMxODc1OH0.46Gq3QAEtXn0CKOUy4hpYPIG7wkIURCVPezCh1DXuuQ',
+  );
+
   runApp(const MyApp());
 }
 
@@ -39,19 +54,24 @@ class MyApp extends StatelessWidget {
         '/intro': (context) => const IntroScreen(),
         '/role-selection': (context) => const RoleSelectionScreen(),
 
+        // Auth
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignupScreen(),
+        '/forgot-password': (context) => const ForgotPasswordScreen(),
+
         // Citizen
         '/citizen-home': (context) => const CitizenHomeScreen(),
         '/add-report': (context) => const AddReportScreen(),
         '/emergency': (context) => const EmergencyScreen(),
         '/news': (context) => const NewsScreen(),
         '/ai-assistant': (context) => const AiAssistantScreen(),
+        '/profile': (context) => const ProfileScreen(),
 
         // Official
-        // Official
-        '/official-dashboard': (context) => OfficialDashboardScreen(),
+        '/official-dashboard': (context) => const OfficialDashboardScreen(),
         '/reports-management': (context) => ReportsManagementScreen(),
-        '/analytics': (context) => AnalyticsScreen(),
-        '/alert-management': (context) => AlertManagementScreen(),
+        '/analytics': (context) => const AnalyticsScreen(),
+        '/alert-management': (context) => const AlertManagementScreen(),
       },
     );
   }
