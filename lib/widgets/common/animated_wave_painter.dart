@@ -14,7 +14,7 @@ class AnimatedWavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(0.3)
+      ..color = color.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     final path = Path();
@@ -39,7 +39,7 @@ class AnimatedWavePainter extends CustomPainter {
 
     // Second wave
     final paint2 = Paint()
-      ..color = color.withOpacity(0.2)
+      ..color = color.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
 
     final path2 = Path();
@@ -89,7 +89,7 @@ class RipplePainter extends CustomPainter {
       final opacity = (1 - rippleProgress) * 0.5;
 
       final paint = Paint()
-        ..color = color.withOpacity(opacity)
+        ..color = color.withValues(alpha: opacity)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2;
 
@@ -126,7 +126,7 @@ class BubblePainter extends CustomPainter {
 
       if (y < size.height && y > -bubble.radius) {
         final paint = Paint()
-          ..color = color.withOpacity(bubble.opacity)
+          ..color = color.withValues(alpha: bubble.opacity)
           ..style = PaintingStyle.fill;
 
         final center = Offset(bubble.x * size.width, y);
@@ -134,7 +134,7 @@ class BubblePainter extends CustomPainter {
 
         // Add shine effect
         final shinePaint = Paint()
-          ..color = Colors.white.withOpacity(bubble.opacity * 0.6)
+          ..color = Colors.white.withValues(alpha: bubble.opacity * 0.6)
           ..style = PaintingStyle.fill;
 
         canvas.drawCircle(

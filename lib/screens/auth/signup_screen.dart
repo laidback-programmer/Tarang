@@ -158,8 +158,8 @@ class _SignupScreenState extends State<SignupScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  AppColors.primary.withOpacity(0.85),
-                  const Color(0xFF006994).withOpacity(0.9),
+                  AppColors.primary.withValues(alpha: 0.85),
+                  const Color(0xFF006994).withValues(alpha: 0.9),
                 ],
               ),
             ),
@@ -192,7 +192,7 @@ class _SignupScreenState extends State<SignupScreen>
                       Text(
                         'Fill in your details to get started',
                         style: AppStyles.bodyMedium.copyWith(
-                          color: AppColors.white.withOpacity(0.8),
+                          color: AppColors.white.withValues(alpha: 0.8),
                         ),
                       ),
 
@@ -208,7 +208,7 @@ class _SignupScreenState extends State<SignupScreen>
                               height: 120,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: AppColors.white.withOpacity(0.2),
+                                color: AppColors.white.withValues(alpha: 0.2),
                                 border: Border.all(
                                   color: AppColors.white,
                                   width: 3,
@@ -224,7 +224,8 @@ class _SignupScreenState extends State<SignupScreen>
                                   ? Icon(
                                       Icons.person,
                                       size: 60,
-                                      color: AppColors.white.withOpacity(0.7),
+                                      color: AppColors.white
+                                          .withValues(alpha: 0.7),
                                     )
                                   : null,
                             ),
@@ -238,7 +239,8 @@ class _SignupScreenState extends State<SignupScreen>
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
+                                      color:
+                                          Colors.black.withValues(alpha: 0.2),
                                       blurRadius: 10,
                                     ),
                                   ],
@@ -259,7 +261,7 @@ class _SignupScreenState extends State<SignupScreen>
                       Text(
                         'Tap to upload photo',
                         style: AppStyles.caption.copyWith(
-                          color: AppColors.white.withOpacity(0.7),
+                          color: AppColors.white.withValues(alpha: 0.7),
                         ),
                       ),
 
@@ -357,7 +359,7 @@ class _SignupScreenState extends State<SignupScreen>
                             _obscurePassword
                                 ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
-                            color: AppColors.white.withOpacity(0.7),
+                            color: AppColors.white.withValues(alpha: 0.7),
                           ),
                           onPressed: () {
                             setState(
@@ -389,7 +391,7 @@ class _SignupScreenState extends State<SignupScreen>
                             _obscureConfirmPassword
                                 ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
-                            color: AppColors.white.withOpacity(0.7),
+                            color: AppColors.white.withValues(alpha: 0.7),
                           ),
                           onPressed: () {
                             setState(
@@ -447,7 +449,7 @@ class _SignupScreenState extends State<SignupScreen>
                           Text(
                             "Already have an account? ",
                             style: AppStyles.bodyMedium.copyWith(
-                              color: AppColors.white.withOpacity(0.8),
+                              color: AppColors.white.withValues(alpha: 0.8),
                             ),
                           ),
                           TextButton(
@@ -502,19 +504,19 @@ class _SignupScreenState extends State<SignupScreen>
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: Icon(icon, color: AppColors.white.withOpacity(0.7)),
+        prefixIcon: Icon(icon, color: AppColors.white.withValues(alpha: 0.7)),
         suffixIcon: suffixIcon,
-        labelStyle: TextStyle(color: AppColors.white.withOpacity(0.9)),
-        hintStyle: TextStyle(color: AppColors.white.withOpacity(0.5)),
+        labelStyle: TextStyle(color: AppColors.white.withValues(alpha: 0.9)),
+        hintStyle: TextStyle(color: AppColors.white.withValues(alpha: 0.5)),
         filled: true,
-        fillColor: AppColors.white.withOpacity(0.2),
+        fillColor: AppColors.white.withValues(alpha: 0.2),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppStyles.borderRadius),
-          borderSide: BorderSide(color: AppColors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: AppColors.white.withValues(alpha: 0.3)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppStyles.borderRadius),
-          borderSide: BorderSide(color: AppColors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: AppColors.white.withValues(alpha: 0.3)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppStyles.borderRadius),

@@ -104,8 +104,8 @@ class _LoginScreenState extends State<LoginScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  AppColors.primary.withOpacity(0.8),
-                  AppColors.primary.withOpacity(0.9),
+                  AppColors.primary.withValues(alpha: 0.8),
+                  AppColors.primary.withValues(alpha: 0.9),
                 ],
               ),
             ),
@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 20,
                               spreadRadius: 5,
                             ),
@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen>
                       Text(
                         'Sign in to continue',
                         style: AppStyles.bodyLarge.copyWith(
-                          color: AppColors.white.withOpacity(0.8),
+                          color: AppColors.white.withValues(alpha: 0.8),
                         ),
                       ),
 
@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen>
                             _obscurePassword
                                 ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
-                            color: AppColors.white.withOpacity(0.7),
+                            color: AppColors.white.withValues(alpha: 0.7),
                           ),
                           onPressed: () {
                             setState(
@@ -277,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen>
                           Text(
                             "Don't have an account? ",
                             style: AppStyles.bodyMedium.copyWith(
-                              color: AppColors.white.withOpacity(0.8),
+                              color: AppColors.white.withValues(alpha: 0.8),
                             ),
                           ),
                           TextButton(
@@ -328,19 +328,19 @@ class _LoginScreenState extends State<LoginScreen>
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: Icon(icon, color: AppColors.white.withOpacity(0.7)),
+        prefixIcon: Icon(icon, color: AppColors.white.withValues(alpha: 0.7)),
         suffixIcon: suffixIcon,
-        labelStyle: TextStyle(color: AppColors.white.withOpacity(0.9)),
-        hintStyle: TextStyle(color: AppColors.white.withOpacity(0.5)),
+        labelStyle: TextStyle(color: AppColors.white.withValues(alpha: 0.9)),
+        hintStyle: TextStyle(color: AppColors.white.withValues(alpha: 0.5)),
         filled: true,
-        fillColor: AppColors.white.withOpacity(0.2),
+        fillColor: AppColors.white.withValues(alpha: 0.2),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppStyles.borderRadius),
-          borderSide: BorderSide(color: AppColors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: AppColors.white.withValues(alpha: 0.3)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppStyles.borderRadius),
-          borderSide: BorderSide(color: AppColors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: AppColors.white.withValues(alpha: 0.3)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppStyles.borderRadius),

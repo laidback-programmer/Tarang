@@ -166,14 +166,16 @@ class _AiAssistantScreenState extends State<AiAssistantScreen>
     ];
     return Container(
       padding: const EdgeInsets.all(16),
-      color: const Color(0xFF0A2472).withOpacity(0.05),
+      color: const Color(0xFF0A2472).withValues(alpha: 0.05),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             "Quick Questions:",
             style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF0A2472)),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF0A2472)),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -199,7 +201,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 2,
                 offset: const Offset(0, 1))
           ],
@@ -218,8 +220,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen>
             isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!isUser)
-            _buildAvatar(isUser: false),
+          if (!isUser) _buildAvatar(isUser: false),
           Flexible(
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -235,7 +236,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   )
@@ -283,7 +284,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 )
@@ -297,7 +298,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen>
                   height: 8,
                   margin: EdgeInsets.only(right: i < 2 ? 4 : 0),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.3 + i * 0.2),
+                    color: Colors.blue.withValues(alpha: 0.3 + i * 0.2),
                     shape: BoxShape.circle,
                   ),
                 );
@@ -316,7 +317,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen>
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, -2),
           )

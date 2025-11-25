@@ -170,20 +170,20 @@ class _IntroScreenState extends State<IntroScreen>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.white.withOpacity(0.2),
-                AppColors.white.withOpacity(0.1),
+                AppColors.white.withValues(alpha: 0.2),
+                AppColors.white.withValues(alpha: 0.1),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             shape: BoxShape.circle,
             border: Border.all(
-              color: AppColors.white.withOpacity(0.3),
+              color: AppColors.white.withValues(alpha: 0.3),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.white.withOpacity(0.2),
+                color: AppColors.white.withValues(alpha: 0.2),
                 blurRadius: 20,
                 spreadRadius: 5,
               ),
@@ -217,7 +217,7 @@ class _IntroScreenState extends State<IntroScreen>
           AppStrings.appTagline,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppColors.white.withOpacity(0.9),
+                color: AppColors.white.withValues(alpha: 0.9),
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 height: 1.4,
@@ -270,20 +270,20 @@ class _IntroScreenState extends State<IntroScreen>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.white.withOpacity(0.15),
-                      AppColors.white.withOpacity(0.05),
+                      AppColors.white.withValues(alpha: 0.15),
+                      AppColors.white.withValues(alpha: 0.05),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.white.withOpacity(0.3),
+                    color: AppColors.white.withValues(alpha: 0.3),
                     width: 1,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.white.withOpacity(0.1),
+                      color: AppColors.white.withValues(alpha: 0.1),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),
@@ -317,10 +317,10 @@ class _IntroScreenState extends State<IntroScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.white.withOpacity(0.1),
+        color: AppColors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.white.withOpacity(0.2),
+          color: AppColors.white.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -328,7 +328,7 @@ class _IntroScreenState extends State<IntroScreen>
         AppStrings.appDescription,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.white.withOpacity(0.9),
+              color: AppColors.white.withValues(alpha: 0.9),
               fontSize: 14,
               fontWeight: FontWeight.w500,
               fontStyle: FontStyle.italic,
@@ -353,7 +353,7 @@ class _IntroScreenState extends State<IntroScreen>
                 borderRadius: BorderRadius.circular(16),
               ),
               elevation: 8,
-              shadowColor: AppColors.accent.withOpacity(0.4),
+              shadowColor: AppColors.accent.withValues(alpha: 0.4),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -370,7 +370,7 @@ class _IntroScreenState extends State<IntroScreen>
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: AppColors.white.withOpacity(0.2),
+                    color: AppColors.white.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -389,7 +389,7 @@ class _IntroScreenState extends State<IntroScreen>
           child: Text(
             "Skip intro →",
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.white.withOpacity(0.7),
+                  color: AppColors.white.withValues(alpha: 0.7),
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -466,7 +466,7 @@ class _OceanWavePainter extends CustomPainter {
         AppColors.primaryDark,
         AppColors.primary,
         AppColors.primaryLight,
-        AppColors.accent.withOpacity(0.8),
+        AppColors.accent.withValues(alpha: 0.8),
       ],
       stops: const [0.0, 0.3, 0.7, 1.0],
       begin: Alignment.topCenter,
@@ -497,7 +497,7 @@ class _OceanWavePainter extends CustomPainter {
     double time,
   ) {
     final wavePaint = Paint()
-      ..color = AppColors.white.withOpacity(opacity)
+      ..color = AppColors.white.withValues(alpha: 0.1)
       ..style = PaintingStyle.fill;
 
     final wavePath = Path();

@@ -170,8 +170,8 @@ class _OfficialLoginScreenState extends State<OfficialLoginScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  AppColors.primaryDark.withOpacity(0.85),
-                  const Color(0xFF004d66).withOpacity(0.95),
+                  AppColors.primaryDark.withValues(alpha: 0.85),
+                  const Color(0xFF004d66).withValues(alpha: 0.95),
                 ],
               ),
             ),
@@ -207,7 +207,7 @@ class _OfficialLoginScreenState extends State<OfficialLoginScreen>
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
+                                    color: Colors.black.withValues(alpha: 0.2),
                                     blurRadius: 20,
                                     spreadRadius: 5,
                                   ),
@@ -236,7 +236,7 @@ class _OfficialLoginScreenState extends State<OfficialLoginScreen>
                             Text(
                               'Authorized personnel only',
                               style: AppStyles.bodyLarge.copyWith(
-                                color: AppColors.white.withOpacity(0.8),
+                                color: AppColors.white.withValues(alpha: 0.8),
                               ),
                             ),
 
@@ -274,7 +274,7 @@ class _OfficialLoginScreenState extends State<OfficialLoginScreen>
                                   _obscurePassword
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined,
-                                  color: AppColors.white.withOpacity(0.7),
+                                  color: AppColors.white.withValues(alpha: 0.7),
                                 ),
                                 onPressed: () {
                                   setState(() =>
@@ -324,18 +324,19 @@ class _OfficialLoginScreenState extends State<OfficialLoginScreen>
                             Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.1),
+                                color: Colors.white.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(
                                     AppStyles.borderRadius),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.3),
+                                  color: Colors.white.withValues(alpha: 0.3),
                                 ),
                               ),
                               child: Row(
                                 children: [
                                   Icon(
                                     Icons.info_outline,
-                                    color: AppColors.white.withOpacity(0.9),
+                                    color:
+                                        AppColors.white.withValues(alpha: 0.9),
                                     size: 20,
                                   ),
                                   const SizedBox(width: 12),
@@ -343,7 +344,8 @@ class _OfficialLoginScreenState extends State<OfficialLoginScreen>
                                     child: Text(
                                       'Contact your administrator if you need access credentials',
                                       style: AppStyles.caption.copyWith(
-                                        color: AppColors.white.withOpacity(0.9),
+                                        color: AppColors.white
+                                            .withValues(alpha: 0.9),
                                       ),
                                     ),
                                   ),
@@ -382,19 +384,19 @@ class _OfficialLoginScreenState extends State<OfficialLoginScreen>
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: Icon(icon, color: AppColors.white.withOpacity(0.7)),
+        prefixIcon: Icon(icon, color: AppColors.white.withValues(alpha: 0.7)),
         suffixIcon: suffixIcon,
-        labelStyle: TextStyle(color: AppColors.white.withOpacity(0.9)),
-        hintStyle: TextStyle(color: AppColors.white.withOpacity(0.5)),
+        labelStyle: TextStyle(color: AppColors.white.withValues(alpha: 0.9)),
+        hintStyle: TextStyle(color: AppColors.white.withValues(alpha: 0.5)),
         filled: true,
-        fillColor: AppColors.white.withOpacity(0.2),
+        fillColor: AppColors.white.withValues(alpha: 0.2),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppStyles.borderRadius),
-          borderSide: BorderSide(color: AppColors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: AppColors.white.withValues(alpha: 0.3)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppStyles.borderRadius),
-          borderSide: BorderSide(color: AppColors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: AppColors.white.withValues(alpha: 0.3)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppStyles.borderRadius),

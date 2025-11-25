@@ -130,7 +130,7 @@ class _EnhancedOceanBottomNavState extends State<EnhancedOceanBottomNav>
             color: backgroundColor,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),
@@ -262,7 +262,7 @@ class _EnhancedOceanBottomNavState extends State<EnhancedOceanBottomNav>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: color.withOpacity(0.4),
+                    color: color.withValues(alpha: 0.4),
                     blurRadius: 15,
                     spreadRadius: 2,
                     offset: const Offset(0, 4),
@@ -356,15 +356,15 @@ class _EnhancedOceanBottomNavState extends State<EnhancedOceanBottomNav>
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              selectedColor.withOpacity(0.2),
-                              selectedColor.withOpacity(0.1),
+                              selectedColor.withValues(alpha: 0.2),
+                              selectedColor.withValues(alpha: 0.1),
                             ],
                           )
                         : null,
                     shape: BoxShape.circle,
                     border: isSelected
                         ? Border.all(
-                            color: selectedColor.withOpacity(0.3),
+                            color: selectedColor.withValues(alpha: 0.3),
                             width: 2,
                           )
                         : null,
@@ -390,7 +390,7 @@ class _EnhancedOceanBottomNavState extends State<EnhancedOceanBottomNav>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: selectedColor.withOpacity(0.5),
+                            color: selectedColor.withValues(alpha: 0.5),
                             blurRadius: 3,
                             spreadRadius: 0.5,
                           ),
@@ -429,9 +429,9 @@ class _EnhancedOceanBottomNavState extends State<EnhancedOceanBottomNav>
             gradient: isSelected
                 ? LinearGradient(
                     colors: [
-                      selectedColor.withOpacity(0.3),
+                      selectedColor.withValues(alpha: 0.3),
                       selectedColor,
-                      selectedColor.withOpacity(0.3),
+                      selectedColor.withValues(alpha: 0.3),
                     ],
                   )
                 : null,
@@ -468,7 +468,7 @@ class AnimatedWavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(0.05)
+      ..color = color.withValues(alpha: 0.05)
       ..style = PaintingStyle.fill;
 
     final path = Path();
@@ -491,7 +491,7 @@ class AnimatedWavePainter extends CustomPainter {
 
     // Second wave
     final paint2 = Paint()
-      ..color = color.withOpacity(0.03)
+      ..color = color.withValues(alpha: 0.03)
       ..style = PaintingStyle.fill;
 
     final path2 = Path();
@@ -537,7 +537,7 @@ class RipplePainter extends CustomPainter {
       final opacity = (1 - rippleProgress) * 0.4;
 
       final paint = Paint()
-        ..color = color.withOpacity(opacity)
+        ..color = color.withValues(alpha: opacity)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2;
 
@@ -572,7 +572,7 @@ class BubblePainter extends CustomPainter {
 
       if (y < size.height && y > -bubble.radius) {
         final paint = Paint()
-          ..color = color.withOpacity(bubble.opacity * 0.5)
+          ..color = color.withValues(alpha: bubble.opacity * 0.5)
           ..style = PaintingStyle.fill;
 
         final center = Offset(bubble.x * size.width, y);
@@ -580,7 +580,7 @@ class BubblePainter extends CustomPainter {
 
         // Shine effect
         final shinePaint = Paint()
-          ..color = Colors.white.withOpacity(bubble.opacity * 0.4)
+          ..color = Colors.white.withValues(alpha: bubble.opacity * 0.4)
           ..style = PaintingStyle.fill;
 
         canvas.drawCircle(
