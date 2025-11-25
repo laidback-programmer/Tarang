@@ -53,5 +53,10 @@ class NavItems {
       label: 'Alerts',
       tooltip: 'Alert Management',
     ),
+    OceanNavItem(
+      icon: Icons.person_rounded,
+      label: 'Profile',
+      tooltip: 'Profile & Settings',
+    ),
   ];
 }

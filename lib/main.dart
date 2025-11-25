@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // Common Screens
 import 'screens/common/intro_screen.dart';
 import 'screens/common/role_selection_screen.dart';
@@ -8,6 +9,7 @@ import 'screens/common/role_selection_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/signup_screen.dart';
 import 'screens/auth/forgot_password_screen.dart';
+import 'screens/auth/official_login_screen.dart';
 
 // Citizen Screens
 import 'screens/citizen/citizen_home_screen.dart';
@@ -25,12 +27,9 @@ import 'screens/official/alert_management_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize Supabase
-  await Supabase.initialize(
-    url: 'https://xnxdswznjmavxoemgtzy.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhueGRzd3puam1hdnhvZW1ndHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDI3NTgsImV4cCI6MjA3NzMxODc1OH0.46Gq3QAEtXn0CKOUy4hpYPIG7wkIURCVPezCh1DXuuQ',
-  );
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
 
   runApp(const MyApp());
 }
@@ -45,8 +44,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
 
-      // Start with intro screen
-      home: const IntroScreen(),
+      // Check auth state and navigate accordingly
+      home: const AuthWrapper(),
 
       // Named routes for navigation
       routes: {
@@ -58,6 +57,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
+        '/official-login': (context) => const OfficialLoginScreen(),
 
         // Citizen
         '/citizen-home': (context) => const CitizenHomeScreen(),
@@ -72,6 +72,36 @@ class MyApp extends StatelessWidget {
         '/reports-management': (context) => ReportsManagementScreen(),
         '/analytics': (context) => const AnalyticsScreen(),
         '/alert-management': (context) => const AlertManagementScreen(),
+      },
+    );
+  }
+}
+
+// Auth wrapper to check if user is already logged in
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        // Show loading while checking auth state
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        // If user is logged in, go to home screen
+        if (snapshot.hasData && snapshot.data != null) {
+          return const CitizenHomeScreen();
+        }
+
+        // Otherwise, show intro screen
+        return const IntroScreen();
       },
     );
   }

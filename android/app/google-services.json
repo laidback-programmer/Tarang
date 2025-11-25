@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1016567735353",
-    "project_id": "seasafe-525ce",
-    "storage_bucket": "seasafe-525ce.firebasestorage.app"
+    "project_number": "985715635796",
+    "project_id": "tarang-e0769",
+    "storage_bucket": "tarang-e0769.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1016567735353:android:2e7b181b2d3fb6ea89d9e8",
+        "mobilesdk_app_id": "1:985715635796:android:2adfbf0a4b8b684bbc1fc1",
         "android_client_info": {
-          "package_name": "com.example.seasafe"
+          "package_name": "com.example.sea_safe"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDeOjioLrRkqXYRpsGf4DFK5A28xQQrTmY"
+          "current_key": "AIzaSyAfZp9bVjY2co1Kjk60i2LOnQsYHK2p2mg"
         }
       ],
       "services": {

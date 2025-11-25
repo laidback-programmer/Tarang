@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_styles.dart';
 
@@ -28,6 +31,11 @@ class _AddReportScreenState extends State<AddReportScreen>
   bool _isGettingLocation = false;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+
+  // Track existing report status
+  String? _currentReportStatus;
+  String? _currentReportId;
+  bool _hasActiveReport = false;
 
   final List<Map<String, dynamic>> disasterTypes = [
     {"name": "Flood", "icon": Icons.water_damage, "color": Colors.blue},
@@ -71,6 +79,42 @@ class _AddReportScreenState extends State<AddReportScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
+    _checkExistingReport();
+  }
+
+  Future<void> _checkExistingReport() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      // Query for any pending or in-progress reports by this user
+      // Note: Removed orderBy to avoid composite index requirement
+      final snapshot = await FirebaseFirestore.instance
+          .collection('reports')
+          .where('userId', isEqualTo: user.uid)
+          .where('status', whereIn: ['pending', 'in progress'])
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        final data = doc.data();
+        setState(() {
+          _hasActiveReport = true;
+          _currentReportStatus = data['status'] ?? 'pending';
+          _currentReportId = doc.id;
+        });
+      } else {
+        // No active reports found
+        setState(() {
+          _hasActiveReport = false;
+          _currentReportStatus = null;
+          _currentReportId = null;
+        });
+      }
+    } catch (e) {
+      print('Error checking existing report: $e');
+    }
   }
 
   @override
@@ -132,13 +176,104 @@ class _AddReportScreenState extends State<AddReportScreen>
     }
   }
 
-  void _submitReport() async {
+  Future<void> _submitReport() async {
     if (!_validateForm()) return;
     setState(() => _isSubmitting = true);
-    await Future.delayed(const Duration(seconds: 2)); // simulate API
-    setState(() => _isSubmitting = false);
-    _showSuccess("Report submitted successfully!");
-    _resetForm();
+
+    try {
+      // Get current user
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        _showError("You must be logged in to submit a report");
+        setState(() => _isSubmitting = false);
+        return;
+      }
+
+      // Get user profile data
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      final userName = userDoc.data()?['name'] ?? user.email ?? 'Anonymous';
+
+      // Upload first image to Firebase Storage (if available)
+      String? imageUrl;
+      if (uploadedFiles.isNotEmpty) {
+        try {
+          final firstImage = uploadedFiles.first;
+          final ext = p.extension(firstImage.name).toLowerCase();
+
+          // Only upload image files
+          if ([".jpg", ".jpeg", ".png"].contains(ext)) {
+            final fileName =
+                '${user.uid}_${DateTime.now().millisecondsSinceEpoch}$ext';
+            final storageRef =
+                FirebaseStorage.instance.ref().child('reports').child(fileName);
+
+            // Upload the file
+            if (kIsWeb && firstImage.bytes != null) {
+              final uploadTask = await storageRef.putData(
+                firstImage.bytes!,
+                SettableMetadata(
+                    contentType: 'image/${ext.replaceAll(".", "")}'),
+              );
+              imageUrl = await uploadTask.ref.getDownloadURL();
+            } else if (firstImage.path != null) {
+              final uploadTask = await storageRef.putFile(
+                File(firstImage.path!),
+                SettableMetadata(
+                    contentType: 'image/${ext.replaceAll(".", "")}'),
+              );
+              imageUrl = await uploadTask.ref.getDownloadURL();
+            }
+          }
+        } catch (storageError) {
+          print('Storage upload error: $storageError');
+          // Continue without image if storage fails
+          imageUrl = null;
+        }
+      }
+
+      // Create report document in Firestore
+      final reportData = {
+        'userId': user.uid,
+        'userName': userName,
+        'userEmail': user.email,
+        'disasterType': selectedDisaster,
+        'severity': selectedSeverity ?? 'Medium',
+        'description': _descriptionController.text.trim(),
+        'imageUrl': imageUrl,
+        'location': {
+          'latitude': _currentPosition!.latitude,
+          'longitude': _currentPosition!.longitude,
+          'address': _locationController.text,
+        },
+        'deviceLocation': {
+          'latitude': _currentPosition!.latitude,
+          'longitude': _currentPosition!.longitude,
+        },
+        'status': 'pending', // pending, verified, resolved
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      await FirebaseFirestore.instance.collection('reports').add(reportData);
+
+      if (mounted) {
+        _showSuccess("Report submitted successfully!");
+        _resetForm();
+        // Check again for any active reports
+        _checkExistingReport();
+      }
+    } catch (e) {
+      if (mounted) {
+        _showError("Failed to submit report: ${e.toString()}");
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
   }
 
   bool _validateForm() {
@@ -150,8 +285,19 @@ class _AddReportScreenState extends State<AddReportScreen>
       _showError("Provide description");
       return false;
     }
+    if (_descriptionController.text.trim().length < 10) {
+      _showError("Description must be at least 10 characters");
+      return false;
+    }
     if (uploadedFiles.isEmpty) {
-      _showError("Upload at least one photo/video");
+      _showError("Upload at least one image");
+      return false;
+    }
+    // Check if first file is an image
+    final firstFile = uploadedFiles.first;
+    final ext = p.extension(firstFile.name).toLowerCase();
+    if (![".jpg", ".jpeg", ".png"].contains(ext)) {
+      _showError("First file must be an image (JPG/PNG)");
       return false;
     }
     if (_currentPosition == null) {
@@ -200,51 +346,290 @@ class _AddReportScreenState extends State<AddReportScreen>
           ),
         ),
       ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildWelcomeCard(),
-              const SizedBox(height: 24),
-              _buildSectionCard(
-                title: "What happened?",
-                icon: Icons.report_problem_outlined,
-                child: _buildDisasterTypeSelector(),
+      body: _hasActiveReport
+          ? _buildActiveReportView()
+          : FadeTransition(
+              opacity: _fadeAnimation,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildWelcomeCard(),
+                    const SizedBox(height: 24),
+                    _buildSectionCard(
+                      title: "What happened?",
+                      icon: Icons.report_problem_outlined,
+                      child: _buildDisasterTypeSelector(),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildSectionCard(
+                      title: "How severe is it?",
+                      icon: Icons.speed,
+                      child: _buildSeveritySelector(),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildSectionCard(
+                      title: "Describe the situation",
+                      icon: Icons.description_outlined,
+                      child: _buildDescriptionField(),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildSectionCard(
+                      title: "Add visual evidence",
+                      icon: Icons.photo_camera_outlined,
+                      child: _buildMediaUpload(),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildSectionCard(
+                      title: "Where is this happening?",
+                      icon: Icons.location_on_outlined,
+                      child: _buildLocationField(),
+                    ),
+                    const SizedBox(height: 32),
+                    _buildSubmitButton(),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-              _buildSectionCard(
-                title: "How severe is it?",
-                icon: Icons.speed,
-                child: _buildSeveritySelector(),
-              ),
-              const SizedBox(height: 20),
-              _buildSectionCard(
-                title: "Describe the situation",
-                icon: Icons.description_outlined,
-                child: _buildDescriptionField(),
-              ),
-              const SizedBox(height: 20),
-              _buildSectionCard(
-                title: "Add visual evidence",
-                icon: Icons.photo_camera_outlined,
-                child: _buildMediaUpload(),
-              ),
-              const SizedBox(height: 20),
-              _buildSectionCard(
-                title: "Where is this happening?",
-                icon: Icons.location_on_outlined,
-                child: _buildLocationField(),
-              ),
-              const SizedBox(height: 32),
-              _buildSubmitButton(),
-              const SizedBox(height: 20),
-            ],
+            ),
+    );
+  }
+
+  Widget _buildActiveReportView() {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: _currentReportId != null
+          ? FirebaseFirestore.instance
+              .collection('reports')
+              .doc(_currentReportId)
+              .snapshots()
+          : null,
+      builder: (context, snapshot) {
+        // Get the latest status from the stream
+        String currentStatus = _currentReportStatus ?? 'pending';
+        if (snapshot.hasData && snapshot.data != null) {
+          final data = snapshot.data!.data() as Map<String, dynamic>?;
+          currentStatus = data?['status'] ?? 'pending';
+        }
+
+        Color statusColor;
+        IconData statusIcon;
+        String statusText;
+        String message;
+        bool showNewReportButton = false;
+
+        switch (currentStatus.toLowerCase()) {
+          case 'in progress':
+            statusColor = Colors.blue;
+            statusIcon = Icons.sync;
+            statusText = 'In Progress';
+            message =
+                'Officials are actively working on your report. We\'ll notify you when it\'s resolved.';
+            break;
+          case 'resolved':
+            statusColor = Colors.green;
+            statusIcon = Icons.check_circle;
+            statusText = 'Resolved';
+            message =
+                'Your report has been successfully resolved by maritime officials. Thank you for keeping our waters safe!';
+            showNewReportButton = true;
+            break;
+          default: // pending
+            statusColor = Colors.orange;
+            statusIcon = Icons.pending;
+            statusText = 'Pending Review';
+            message =
+                'Your report is awaiting review by maritime officials. You\'ll be notified of any status changes.';
+        }
+
+        return Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: statusColor.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(statusIcon, size: 64, color: statusColor),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        'Report $statusText',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: statusColor,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: statusColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: statusColor, width: 1.5),
+                        ),
+                        child: Text(
+                          statusText.toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: statusColor,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        message,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey.shade700,
+                          height: 1.5,
+                        ),
+                      ),
+                      if (!showNewReportButton) ...[
+                        const SizedBox(height: 32),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0A6FB8).withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: const Color(0xFF0A6FB8).withOpacity(0.2),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.info_outline,
+                                  color: Color(0xFF0A6FB8), size: 24),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'You can submit a new report once this one is resolved.',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey.shade700,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 24),
+                      if (showNewReportButton) ...[
+                        // Resolved - show button to create new report
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF0A6FB8), Color(0xFF006994)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF0A6FB8).withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                _hasActiveReport = false;
+                                _currentReportId = null;
+                                _currentReportStatus = null;
+                              });
+                            },
+                            icon:
+                                const Icon(Icons.add_circle_outline, size: 22),
+                            label: const Text(
+                              'Report New Hazard',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              foregroundColor: Colors.white,
+                              shadowColor: Colors.transparent,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 32, vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 0,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.home, size: 20),
+                          label: const Text('Go to Home'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: const Color(0xFF0A6FB8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                          ),
+                        ),
+                      ] else ...[
+                        // Not resolved yet - show refresh button
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            // Refresh to check status
+                            _checkExistingReport();
+                          },
+                          icon: const Icon(Icons.refresh, size: 20),
+                          label: const Text('Refresh Status'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0A6FB8),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

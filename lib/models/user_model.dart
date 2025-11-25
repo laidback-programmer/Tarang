@@ -19,7 +19,7 @@ class UserModel {
     required this.updatedAt,
   });
 
-  // From JSON
+  // From JSON (handles both Firestore Timestamps and ISO strings)
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as String,
@@ -28,9 +28,26 @@ class UserModel {
       phone: json['phone'] as String,
       address: json['address'] as String,
       photoUrl: json['photo_url'] as String?,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      createdAt: _parseDateTime(json['created_at']),
+      updatedAt: _parseDateTime(json['updated_at']),
     );
+  }
+
+  // Helper to parse DateTime from Firestore Timestamp or ISO string
+  static DateTime _parseDateTime(dynamic value) {
+    if (value == null) return DateTime.now();
+    if (value is DateTime) return value;
+    if (value is String) return DateTime.parse(value);
+    // Handle Firestore Timestamp
+    if (value is Map && value.containsKey('_seconds')) {
+      return DateTime.fromMillisecondsSinceEpoch(value['_seconds'] * 1000);
+    }
+    // Handle Firestore Timestamp object
+    try {
+      return (value as dynamic).toDate();
+    } catch (e) {
+      return DateTime.now();
+    }
   }
 
   // To JSON

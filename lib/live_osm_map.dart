@@ -4,7 +4,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LiveOSMMap extends StatefulWidget {
-  const LiveOSMMap({super.key});
+  final List<Map<String, dynamic>>? reports;
+
+  const LiveOSMMap({super.key, this.reports});
 
   @override
   State<LiveOSMMap> createState() => _LiveOSMMapState();
@@ -45,7 +47,8 @@ class _LiveOSMMapState extends State<LiveOSMMap> {
       }
 
       if (permission == LocationPermission.deniedForever) {
-        _handleError('Location permissions are permanently denied. Please enable them in app settings.');
+        _handleError(
+            'Location permissions are permanently denied. Please enable them in app settings.');
         return;
       }
 
@@ -66,7 +69,6 @@ class _LiveOSMMapState extends State<LiveOSMMap> {
           _mapController.move(_currentLocation!, 15.0);
         }
       });
-
     } catch (e) {
       _handleError('Failed to get location: ${e.toString()}');
     }
@@ -82,6 +84,136 @@ class _LiveOSMMapState extends State<LiveOSMMap> {
 
   LatLng get _effectiveLocation {
     return _currentLocation ?? _defaultLocation;
+  }
+
+  List<Marker> _buildMarkers() {
+    List<Marker> markers = [];
+
+    // Add current location marker
+    markers.add(
+      Marker(
+        point: _effectiveLocation,
+        child: const Icon(
+          Icons.my_location,
+          color: Colors.blue,
+          size: 35,
+        ),
+      ),
+    );
+
+    // Add report markers
+    if (widget.reports != null) {
+      for (var report in widget.reports!) {
+        final locationData = report['location'] as Map<String, dynamic>?;
+        if (locationData != null) {
+          final lat = locationData['latitude'] as num?;
+          final lng = locationData['longitude'] as num?;
+
+          if (lat != null && lng != null) {
+            final severity =
+                (report['severity'] ?? 'Medium').toString().toLowerCase();
+            final disasterType = report['disasterType'] ?? 'Unknown';
+
+            // Color based on severity
+            Color markerColor;
+            if (severity == 'critical') {
+              markerColor = Colors.red;
+            } else if (severity == 'high') {
+              markerColor = Colors.deepOrange;
+            } else if (severity == 'medium') {
+              markerColor = Colors.orange;
+            } else {
+              markerColor = Colors.yellow;
+            }
+
+            markers.add(
+              Marker(
+                point: LatLng(lat.toDouble(), lng.toDouble()),
+                child: GestureDetector(
+                  onTap: () {
+                    // Show report details in a tooltip
+                    _showReportTooltip(report);
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        color: markerColor,
+                        size: 40,
+                      ),
+                      Positioned(
+                        top: 8,
+                        child: Icon(
+                          _getDisasterIcon(disasterType),
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+        }
+      }
+    }
+
+    return markers;
+  }
+
+  IconData _getDisasterIcon(String type) {
+    switch (type.toLowerCase()) {
+      case 'flood':
+        return Icons.water_damage;
+      case 'cyclone':
+        return Icons.cyclone;
+      case 'tsunami':
+        return Icons.waves;
+      case 'earthquake':
+        return Icons.vibration;
+      case 'fire':
+        return Icons.local_fire_department;
+      case 'oil spill':
+        return Icons.opacity;
+      case 'landslide':
+        return Icons.terrain;
+      case 'storm surge':
+        return Icons.storm;
+      case 'coastal erosion':
+        return Icons.landscape;
+      default:
+        return Icons.warning;
+    }
+  }
+
+  void _showReportTooltip(Map<String, dynamic> report) {
+    final disasterType = report['disasterType'] ?? 'Unknown';
+    final locationData = report['location'] as Map<String, dynamic>?;
+    final locationStr = locationData?['address'] ?? 'Unknown Location';
+    final severity = report['severity'] ?? 'Medium';
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              disasterType,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 4),
+            Text(locationStr),
+            const SizedBox(height: 4),
+            Text('Severity: $severity'),
+          ],
+        ),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
@@ -103,20 +235,12 @@ class _LiveOSMMapState extends State<LiveOSMMap> {
                     ),
                     children: [
                       TileLayer(
-                        urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        urlTemplate:
+                            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                         userAgentPackageName: 'com.example.sea_safe',
                       ),
                       MarkerLayer(
-                        markers: [
-                          Marker(
-                            point: _effectiveLocation,
-                            child: const Icon(
-                              Icons.location_on,
-                              color: Colors.red,
-                              size: 40,
-                            ),
-                          ),
-                        ],
+                        markers: _buildMarkers(),
                       ),
                     ],
                   ),

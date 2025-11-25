@@ -478,7 +478,8 @@ class _OceanWavePainter extends CustomPainter {
         Rect.fromLTWH(0, 0, size.width, size.height),
       );
 
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
+    canvas.drawRect(
+        Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
 
     _drawWaveLayer(canvas, size, 0.65, 0.2, 40, 2.0, animationValue);
     _drawWaveLayer(canvas, size, 0.72, 0.15, 25, -1.5, animationValue);

@@ -59,6 +59,14 @@ OVERFLOW_FIX_SUMMARY.md
 api_keys.dart
 secrets.dart
 
+# Firebase configuration files (contains sensitive keys)
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
 # Generated files
 *.g.dart
 *.freezed.dart

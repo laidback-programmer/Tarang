@@ -4,6 +4,7 @@ import '../../core/enums/user_role.dart';
 import '../../core/utils/role_manager.dart';
 import '../../core/utils/storage_util.dart';
 import '../auth/login_screen.dart';
+import '../auth/official_login_screen.dart';
 import '../official/official_dashboard_screen.dart';
 
 class RoleSelectionScreen extends StatefulWidget {
@@ -433,10 +434,10 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
 
       if (!mounted) return;
 
-      // Maritime Officials go directly to dashboard (no auth required)
-      // Citizens need to login
+      // Maritime Officials need special login credentials
+      // Citizens use Firebase authentication
       final routeName = _selectedRole == UserRole.official
-          ? OfficialDashboardScreen.routeName
+          ? OfficialLoginScreen.routeName
           : LoginScreen.routeName;
 
       Navigator.of(context).pushNamedAndRemoveUntil(

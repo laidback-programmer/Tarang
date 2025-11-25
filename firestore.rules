@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user is an official
+    function isOfficial() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'official';
+    }
+    
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users collection - users can read/write their own data
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if isOwner(userId);
+      
+      // Users can write their own profile
+      allow write: if isOwner(userId);
+      
+      // Officials can read all user profiles (for reports)
+      allow read: if isOfficial();
+    }
+    
+    // Reports collection
+    match /reports/{reportId} {
+      // Anyone authenticated can read all reports
+      // This allows both citizens and officials to view reports
+      allow read: if isAuthenticated();
+      
+      // Only authenticated users can create reports
+      // The userId must match the authenticated user
+      allow create: if isAuthenticated() && 
+                       request.resource.data.userId == request.auth.uid;
+      
+      // Users can update their own reports OR officials can update any report
+      // This allows officials to change report status
+      // Check if user document exists before checking role
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'official')
+      );
+      
+      // Only the report owner can delete their own report
+      allow delete: if isAuthenticated() && 
+                       resource.data.userId == request.auth.uid;
+    }
+    
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

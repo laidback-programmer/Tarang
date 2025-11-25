@@ -1,29 +1,34 @@
 # 🌊 Tarang - Maritime Hazard Management System
 
-A comprehensive Flutter application for maritime disaster management, enabling citizens to report hazards and officials to manage emergency responses.
+A comprehensive Flutter application for maritime disaster management, enabling citizens to report hazards and officials to manage emergency responses in real-time.
 
 ## 📱 Features
 
 ### For Citizens
-- **Report Hazards**: Submit maritime incidents with location, photos, and details
-- **AI-Powered Disaster News**: Real-time disaster alerts using Gemini AI with web scraping & NLP
-- **Location-Based Alerts**: Get notified about disasters within 500km radius
+- **Report Hazards**: Submit maritime incidents with location, photos, and severity levels
+- **Live Hazard Map**: Interactive map showing all active reports with color-coded severity markers
+- **Real-time Status Tracking**: Track your submitted reports from pending to resolution
+- **Community Reports**: View recent hazards reported by other citizens
 - **AI Assistant**: Get AI-powered guidance during emergencies
 - **Emergency SOS**: Quick access to emergency services
+- **News Feed**: Stay updated with maritime safety news
 
 ### For Maritime Officials
-- **Dashboard**: Overview of all reported incidents and analytics
-- **Reports Management**: Review, verify, and update hazard reports
-- **Alert System**: Send warnings and alerts to affected areas
+- **Real-time Dashboard**: Live overview of all reported incidents with statistics
+- **Reports Management**: Review, verify, update status, and manage hazard reports
 - **Analytics**: Data visualization and trend analysis
+- **Alert Management**: Monitor and respond to critical situations
+- **Profile Management**: Secure official accounts with role-based access
 
-## 🎨 Design Theme
+## 🎨 Design Features
 
 Beautiful **ocean-themed UI** with:
-- Animated wave backgrounds
-- Smooth transitions and ripple effects
-- Enhanced ocean navigation bar
-- Gradient overlays and water-inspired animations
+- Gradient backgrounds and modern card designs
+- Real-time data updates via Firebase streams
+- Interactive maps with custom markers
+- Smooth animations and transitions
+- Color-coded severity indicators (Critical, High, Medium, Low)
+- Enhanced navigation with floating action buttons
 
 ## 🚀 Getting Started
 
@@ -31,7 +36,7 @@ Beautiful **ocean-themed UI** with:
 - Flutter SDK (3.0 or higher)
 - Dart SDK
 - Android Studio / VS Code
-- Supabase account (for authentication)
+- Firebase account
 
 ### Installation
 
@@ -46,59 +51,79 @@ cd Tarang
 flutter pub get
 ```
 
-3. Set up Supabase (see [AUTHENTICATION_SETUP.md](AUTHENTICATION_SETUP.md))
+3. Set up Firebase
+   - Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
+   - Add Android/iOS apps to your Firebase project
+   - Download `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
+   - Place config files in appropriate directories
+   - Enable Authentication (Email/Password) and Firestore Database
 
-4. Set up Gemini API (see [GEMINI_SETUP.md](GEMINI_SETUP.md))
+4. Configure Firestore Rules
+   - Copy rules from `firestore.rules` to your Firebase Console
+   - Deploy the rules to enable proper security
 
 5. Run the app
 ```bash
 flutter run
 ```
 
-## 📦 Dependencies
+## 📦 Key Dependencies
 
-- `cached_network_image` - Image caching
-- `intl` - Internationalization
-- `geolocator` - Location services
-- `image_picker` - Photo uploads
-- `supabase_flutter` - Backend & authentication
-- `http` - API requests & Gemini AI integration
-- `file_picker` - Media file selection
+- **Firebase Suite**: `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_storage`
+- **Maps**: `flutter_map`, `latlong2`, `geolocator`
+- **UI**: `cached_network_image`, `intl`
+- **Media**: `image_picker`, `file_picker`
+
+See `pubspec.yaml` for complete dependency list.
 
 ## 🗂️ Project Structure
 
 ```
 lib/
-├── core/              # Core utilities, constants, enums
-├── models/            # Data models
-├── providers/         # State management
+├── core/              # Constants, styles, colors
+├── models/            # Data models (HazardReport, User, etc.)
 ├── screens/           # UI screens
-│   ├── auth/         # Login, signup, forgot password
-│   ├── citizen/      # Citizen-specific screens
-│   ├── official/     # Official-specific screens
-│   └── common/       # Shared screens
+│   ├── auth/         # Login, signup screens
+│   ├── citizen/      # Citizen features (home, report, profile)
+│   ├── official/     # Official features (dashboard, management)
+│   └── common/       # Shared screens (intro, role selection)
 ├── services/          # API and business logic
-└── widgets/          # Reusable UI components
+├── widgets/          # Reusable components
+└── live_osm_map.dart # Interactive map component
 ```
 
 ## 🔐 Authentication
 
-The app includes a complete authentication system:
-- Email/Password login
-- User registration with profile photo
-- Password reset
-- Role-based access (Citizen/Official)
+Two role-based authentication systems:
 
-See [AUTHENTICATION_SETUP.md](AUTHENTICATION_SETUP.md) for detailed setup instructions.
+### Citizens
+- Email/password registration
+- Profile with personal information
+- Submit and track reports
 
-## 🌐 API Integration
+### Officials
+- Pre-configured official accounts
 
-- **Supabase**: Backend, database, and authentication
-- **Gemini AI**: AI-powered disaster news with web scraping & NLP analysis
-- **Geocoding**: Location-based services and reverse geocoding
-- **Real-time Alerts**: Location-based disaster monitoring (500km radius)
 
-See [GEMINI_SETUP.md](GEMINI_SETUP.md) for Gemini API configuration.
+## 🗺️ Map Features
+
+- **Interactive OpenStreetMap** integration
+- **Color-coded markers** by severity:
+  - 🔴 Critical
+  - 🟠 High
+  - 🟡 Medium
+  - 🟢 Low
+- **Tap markers** to view report details
+- **Current location** tracking
+- **Real-time updates** as new reports come in
+
+## 📊 Report Workflow
+
+1. **Citizen submits report** with disaster type, location, severity, description, and photo
+2. **Status: Pending** - Awaiting official review
+3. **Status: In Progress** - Official is working on it
+4. **Status: Resolved** - Issue has been addressed
+5. **Citizen can submit new report** once previous one is resolved
 
 ## 🛠️ Development
 
@@ -108,28 +133,69 @@ flutter test
 ```
 
 ### Building for Production
+
 ```bash
-# Android
-flutter build apk --release
+# Android APK with optimization
+flutter build apk --release --split-per-abi --obfuscate --split-debug-info=./debug-info
+
+# Android App Bundle (recommended for Play Store)
+flutter build appbundle --release --obfuscate --split-debug-info=./debug-info
 
 # iOS
 flutter build ios --release
 ```
 
-## 📄 License
+### Code Optimization
+- Enable code shrinking in `android/app/build.gradle.kts`
+- Use app bundles for 40-50% size reduction
+- Optimize images (use WebP format)
+- Remove unused dependencies
 
-This project is open source and available under the MIT License.
+## 🔥 Firebase Setup
+
+1. **Authentication**: Enable Email/Password sign-in method
+2. **Firestore Database**: Create database in production mode
+3. **Storage**: Enable Firebase Storage for image uploads
+4. **Security Rules**: Deploy the rules from `firestore.rules`
+
+### Firestore Collections
+- `users`: User profiles and roles
+- `reports`: Hazard reports with location, images, status
+
+## 🌟 Key Features Implementation
+
+### Real-time Updates
+All data uses Firebase streams for instant synchronization between citizens and officials.
+
+### Status Tracking
+Citizens see real-time status updates without manual refresh when officials change report status.
+
+### Location-based Filtering
+Query reports by status, severity, and geographic location.
+
+## 📱 Supported Platforms
+
+- ✅ Android
+- ✅ iOS
+- ✅ Web (with limitations on location services)
+- ✅ Windows (development)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 👥 Contributors
 
-- [Your Name]
+- [@ArushRastogi47](https://github.com/ArushRastogi47) - Project Developer
 
-## 🙏 Acknowledgments
+## 📄 License
 
-- Flutter team for the amazing framework
-- Supabase for backend infrastructure
-- OpenStreetMap for mapping services
+This project is licensed under the MIT License.
+
+## 👨‍💻 Author
+
+Built with 💙 for Maritime Safety
 
 ---
 
-**Made with 💙 for Maritime Safety**
+**Note**: This is an educational project demonstrating Flutter, Firebase, and real-time data management for disaster response systems.

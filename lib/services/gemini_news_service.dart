@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 
 class GeminiNewsService {
   // IMPORTANT: Keep API key secure in production (do not hardcode).
-  static const String _apiKey = 'YOUR_GOOGLE_API_KEY_HERE';
+  static const String _apiKey = 'YOUR_GOOGLE_CLOUD_API_KEY_HERE';
 
   // Preferred models in descending order of desired capability.
   static final List<String> _preferredModels = [
