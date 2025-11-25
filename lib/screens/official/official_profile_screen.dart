@@ -134,15 +134,15 @@ class _OfficialProfileScreenState extends State<OfficialProfileScreen> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          const Color(0xFF0A6FB8).withOpacity(0.1),
-                          const Color(0xFF006994).withOpacity(0.05),
+                          const Color(0xFF0A6FB8).withValues(alpha: 0.1),
+                          const Color(0xFF006994).withValues(alpha: 0.05),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: const Color(0xFF0A6FB8).withOpacity(0.2),
+                        color: const Color(0xFF0A6FB8).withValues(alpha: 0.2),
                       ),
                     ),
                     child: Column(
@@ -151,7 +151,8 @@ class _OfficialProfileScreenState extends State<OfficialProfileScreen> {
                           width: 100,
                           height: 100,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0A6FB8).withOpacity(0.1),
+                            color:
+                                const Color(0xFF0A6FB8).withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: const Color(0xFF0A6FB8),
@@ -325,7 +326,7 @@ class _OfficialProfileScreenState extends State<OfficialProfileScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -369,7 +370,7 @@ class _OfficialProfileScreenState extends State<OfficialProfileScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFF0A6FB8).withOpacity(0.1),
+              color: const Color(0xFF0A6FB8).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, size: 20, color: const Color(0xFF0A6FB8)),

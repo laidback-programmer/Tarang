@@ -153,8 +153,8 @@ class _NewsScreenState extends State<NewsScreen> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                AppColors.primary.withOpacity(0.1),
-                                AppColors.primaryLight.withOpacity(0.05)
+                                AppColors.primary.withValues(alpha: 0.1),
+                                AppColors.primaryLight.withValues(alpha: 0.05)
                               ],
                             ),
                           ),
@@ -330,7 +330,7 @@ class _NewsScreenState extends State<NewsScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: categoryColor.withOpacity(0.1),
+                color: categoryColor.withValues(alpha: 0.1),
                 borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(AppStyles.borderRadius)),
               ),
@@ -351,7 +351,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppColors.info.withOpacity(0.2),
+                        color: AppColors.info.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Row(
@@ -487,7 +487,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: AppColors.success.withOpacity(0.1),
+                          color: AppColors.success.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(4),
                           border: Border.all(color: AppColors.success),
                         ),
@@ -587,7 +587,7 @@ class _NewsScreenState extends State<NewsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: colors[severity]?.withOpacity(0.1),
+        color: colors[severity]?.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: colors[severity] ?? AppColors.gray),
       ),
@@ -681,13 +681,16 @@ class _NewsScreenState extends State<NewsScreen> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
-                colors: [AppColors.success, AppColors.success.withOpacity(0.6)],
+                colors: [
+                  AppColors.success,
+                  AppColors.success.withValues(alpha: 0.6)
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.success.withOpacity(0.3),
+                  color: AppColors.success.withValues(alpha: 0.3),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
@@ -731,9 +734,10 @@ class _NewsScreenState extends State<NewsScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.05),
+              color: AppColors.primary.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(AppStyles.borderRadius),
-              border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+              border:
+                  Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
             ),
             child: Column(
               children: [
@@ -867,7 +871,10 @@ class _NewsScreenState extends State<NewsScreen> {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [categoryColor, categoryColor.withOpacity(0.7)],
+                      colors: [
+                        categoryColor,
+                        categoryColor.withValues(alpha: 0.7)
+                      ],
                     ),
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(16)),
@@ -997,7 +1004,7 @@ class _NewsScreenState extends State<NewsScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: AppColors.success.withOpacity(0.1),
+                              color: AppColors.success.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(color: AppColors.success),
                             ),

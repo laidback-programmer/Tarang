@@ -19,7 +19,8 @@ class _EmergencyScreenState extends State<EmergencyScreen>
     },
     {
       "user": "Citizen (Andaman)",
-      "report": "Water suddenly receded from shoreline – possible tsunami warning!",
+      "report":
+          "Water suddenly receded from shoreline – possible tsunami warning!",
       "time": "15 mins ago",
       "type": "Tsunami",
       "severity": "High"
@@ -50,14 +51,15 @@ class _EmergencyScreenState extends State<EmergencyScreen>
     super.initState();
 
     // SOS pulsating animation
-    _sosController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
+    _sosController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 800));
     _sosAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween<double>(begin: 1.0, end: 1.1), weight: 1),
       TweenSequenceItem(tween: Tween<double>(begin: 1.1, end: 1.0), weight: 1),
     ]).animate(CurvedAnimation(parent: _sosController, curve: Curves.easeInOut))
       ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) _sosController.reverse();
+        if (status == AnimationStatus.completed)
+          _sosController.reverse();
         else if (status == AnimationStatus.dismissed && _sosActive)
           _sosController.forward();
       });
@@ -137,14 +139,22 @@ class _EmergencyScreenState extends State<EmergencyScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [
-        BoxShadow(
-            color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 5))
-      ]),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 5))
+          ]),
       child: Column(
         children: [
           const Text("EMERGENCY ALERT",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF0A2472), letterSpacing: 1.2)),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF0A2472),
+                  letterSpacing: 1.2)),
           const SizedBox(height: 10),
           const Text(
             "Tap to send immediate distress signal to authorities and nearby responders",
@@ -163,20 +173,25 @@ class _EmergencyScreenState extends State<EmergencyScreen>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: (_sosActive ? Colors.red[700]! : const Color(0xFFE83636))
-                          .withOpacity(0.4),
+                      color: (_sosActive
+                              ? Colors.red[700]!
+                              : const Color(0xFFE83636))
+                          .withValues(alpha: 0.4),
                       blurRadius: _sosActive ? 20 : 10,
                       spreadRadius: _sosActive ? 4 : 2,
                     )
                   ],
                 ),
-                child: const Icon(Icons.warning_rounded, size: 40, color: Colors.white),
+                child: const Icon(Icons.warning_rounded,
+                    size: 40, color: Colors.white),
               ),
             ),
           ),
           const SizedBox(height: 10),
           Text(
-            _sosActive ? "ALERT ACTIVE - HELP IS ON THE WAY" : "TAP FOR EMERGENCY SOS",
+            _sosActive
+                ? "ALERT ACTIVE - HELP IS ON THE WAY"
+                : "TAP FOR EMERGENCY SOS",
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
@@ -194,30 +209,46 @@ class _EmergencyScreenState extends State<EmergencyScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Quick Actions",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF0A2472))),
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0A2472))),
         const SizedBox(height: 12),
         SlideTransition(
           position: _cardSlideAnimations[0],
-          child: _buildQuickAction(Icons.add_location_alt, const Color(0xFF16C79A),
-              "Report Hazard", "Submit geotagged hazard reports", () => Navigator.pushNamed(context, "/add")),
+          child: _buildQuickAction(
+              Icons.add_location_alt,
+              const Color(0xFF16C79A),
+              "Report Hazard",
+              "Submit geotagged hazard reports",
+              () => Navigator.pushNamed(context, "/add")),
         ),
         const SizedBox(height: 12),
         SlideTransition(
           position: _cardSlideAnimations[1],
-          child: _buildQuickAction(Icons.health_and_safety, const Color(0xFFF6A32C),
-              "Safety Guidelines", "What to do during a hazard event", () {}),
+          child: _buildQuickAction(
+              Icons.health_and_safety,
+              const Color(0xFFF6A32C),
+              "Safety Guidelines",
+              "What to do during a hazard event",
+              () {}),
         ),
         const SizedBox(height: 12),
         SlideTransition(
           position: _cardSlideAnimations[2],
-          child: _buildQuickAction(Icons.map, const Color(0xFF3D7BFF),
-              "View Hazard Map", "See live hazard hotspots & reports", () => Navigator.pushNamed(context, "/map")),
+          child: _buildQuickAction(
+              Icons.map,
+              const Color(0xFF3D7BFF),
+              "View Hazard Map",
+              "See live hazard hotspots & reports",
+              () => Navigator.pushNamed(context, "/map")),
         ),
       ],
     );
   }
 
-  Widget _buildQuickAction(IconData icon, Color color, String title, String subtitle, VoidCallback onTap) {
+  Widget _buildQuickAction(IconData icon, Color color, String title,
+      String subtitle, VoidCallback onTap) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -226,10 +257,12 @@ class _EmergencyScreenState extends State<EmergencyScreen>
         leading: Container(
           width: 50,
           height: 50,
-          decoration: BoxDecoration(color: color.withOpacity(0.2), shape: BoxShape.circle),
+          decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.2), shape: BoxShape.circle),
           child: Icon(icon, color: color, size: 26),
         ),
-        title: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        title: Text(title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         subtitle: Text(subtitle, style: const TextStyle(fontSize: 13)),
         trailing: Icon(Icons.arrow_forward_ios_rounded, color: color, size: 16),
         onTap: onTap,
@@ -241,35 +274,52 @@ class _EmergencyScreenState extends State<EmergencyScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [
-        BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 5))
-      ]),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 5))
+          ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               const Text("Live Hazard Feed",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF0A2472))),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0A2472))),
               const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0A2472).withOpacity(0.1),
+                  color: const Color(0xFF0A2472).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    Container(width: 8, height: 8, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle)),
+                    Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                            color: Colors.red, shape: BoxShape.circle)),
                     const SizedBox(width: 4),
-                    const Text("LIVE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF0A2472))),
+                    const Text("LIVE",
+                        style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0A2472))),
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          const Text("Real-time alerts from your area", style: TextStyle(fontSize: 14, color: Colors.grey)),
+          const Text("Real-time alerts from your area",
+              style: TextStyle(fontSize: 14, color: Colors.grey)),
           const SizedBox(height: 16),
           Column(
             children: hazardFeed.asMap().entries.map((entry) {
@@ -290,7 +340,8 @@ class _EmergencyScreenState extends State<EmergencyScreen>
 
   Widget _buildHazardCard(Map<String, String> feed) {
     Color severityColor = Colors.grey;
-    if (feed["severity"] == "High") severityColor = Colors.red;
+    if (feed["severity"] == "High")
+      severityColor = Colors.red;
     else if (feed["severity"] == "Moderate") severityColor = Colors.orange;
 
     return Container(
@@ -298,7 +349,12 @@ class _EmergencyScreenState extends State<EmergencyScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5, offset: const Offset(0, 2))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 5,
+              offset: const Offset(0, 2))
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,8 +362,11 @@ class _EmergencyScreenState extends State<EmergencyScreen>
           Container(
             width: 40,
             height: 40,
-            decoration: BoxDecoration(color: _getHazardColor(feed["type"]!).withOpacity(0.2), shape: BoxShape.circle),
-            child: Icon(_getHazardIcon(feed["type"]!), color: _getHazardColor(feed["type"]!), size: 20),
+            decoration: BoxDecoration(
+                color: _getHazardColor(feed["type"]!).withValues(alpha: 0.2),
+                shape: BoxShape.circle),
+            child: Icon(_getHazardIcon(feed["type"]!),
+                color: _getHazardColor(feed["type"]!), size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -316,24 +375,45 @@ class _EmergencyScreenState extends State<EmergencyScreen>
               children: [
                 Row(
                   children: [
-                    Text(feed["type"]!, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _getHazardColor(feed["type"]!))),
+                    Text(feed["type"]!,
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: _getHazardColor(feed["type"]!))),
                     const Spacer(),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(color: severityColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                      child: Text(feed["severity"]!, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: severityColor)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                          color: severityColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Text(feed["severity"]!,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: severityColor)),
                     ),
                   ],
                 ),
-                Text(feed["report"]!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                Text(feed["report"]!,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(feed["user"]!, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text(feed["user"]!,
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey)),
                     const SizedBox(width: 8),
-                    Container(width: 4, height: 4, decoration: const BoxDecoration(color: Colors.grey, shape: BoxShape.circle)),
+                    Container(
+                        width: 4,
+                        height: 4,
+                        decoration: const BoxDecoration(
+                            color: Colors.grey, shape: BoxShape.circle)),
                     const SizedBox(width: 8),
-                    Text(feed["time"]!, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text(feed["time"]!,
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey)),
                   ],
                 ),
               ],

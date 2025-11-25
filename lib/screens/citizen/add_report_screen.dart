@@ -7,8 +7,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_styles.dart';
 
 class AddReportScreen extends StatefulWidget {
   static const String routeName = '/add_report';
@@ -455,7 +453,7 @@ class _AddReportScreenState extends State<AddReportScreen>
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
                       ),
@@ -466,7 +464,7 @@ class _AddReportScreenState extends State<AddReportScreen>
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: statusColor.withOpacity(0.1),
+                          color: statusColor.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(statusIcon, size: 64, color: statusColor),
@@ -485,7 +483,7 @@ class _AddReportScreenState extends State<AddReportScreen>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: statusColor.withOpacity(0.1),
+                          color: statusColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: statusColor, width: 1.5),
                         ),
@@ -514,10 +512,12 @@ class _AddReportScreenState extends State<AddReportScreen>
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0A6FB8).withOpacity(0.05),
+                            color:
+                                const Color(0xFF0A6FB8).withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: const Color(0xFF0A6FB8).withOpacity(0.2),
+                              color: const Color(0xFF0A6FB8)
+                                  .withValues(alpha: 0.2),
                             ),
                           ),
                           child: Row(
@@ -552,7 +552,8 @@ class _AddReportScreenState extends State<AddReportScreen>
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF0A6FB8).withOpacity(0.3),
+                                color: const Color(0xFF0A6FB8)
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -639,21 +640,22 @@ class _AddReportScreenState extends State<AddReportScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF0A6FB8).withOpacity(0.1),
-            const Color(0xFF006994).withOpacity(0.05)
+            const Color(0xFF0A6FB8).withValues(alpha: 0.1),
+            const Color(0xFF006994).withValues(alpha: 0.05)
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF0A6FB8).withOpacity(0.2)),
+        border:
+            Border.all(color: const Color(0xFF0A6FB8).withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFF0A6FB8).withOpacity(0.1),
+              color: const Color(0xFF0A6FB8).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child:
@@ -693,7 +695,7 @@ class _AddReportScreenState extends State<AddReportScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -744,7 +746,7 @@ class _AddReportScreenState extends State<AddReportScreen>
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: isSelected
-                  ? (type['color'] as Color).withOpacity(0.1)
+                  ? (type['color'] as Color).withValues(alpha: 0.1)
                   : Colors.grey.shade50,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
@@ -798,8 +800,9 @@ class _AddReportScreenState extends State<AddReportScreen>
               margin: const EdgeInsets.only(right: 8),
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                color:
-                    isSelected ? color.withOpacity(0.1) : Colors.grey.shade50,
+                color: isSelected
+                    ? color.withValues(alpha: 0.1)
+                    : Colors.grey.shade50,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isSelected ? color : Colors.grey.shade300,
@@ -867,10 +870,10 @@ class _AddReportScreenState extends State<AddReportScreen>
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: const Color(0xFF0A6FB8).withOpacity(0.05),
+              color: const Color(0xFF0A6FB8).withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: const Color(0xFF0A6FB8).withOpacity(0.3),
+                color: const Color(0xFF0A6FB8).withValues(alpha: 0.3),
                 width: 2,
                 style: BorderStyle.solid,
               ),
@@ -880,7 +883,7 @@ class _AddReportScreenState extends State<AddReportScreen>
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0A6FB8).withOpacity(0.1),
+                    color: const Color(0xFF0A6FB8).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -950,7 +953,7 @@ class _AddReportScreenState extends State<AddReportScreen>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 4,
                             ),
                           ],
@@ -1036,7 +1039,7 @@ class _AddReportScreenState extends State<AddReportScreen>
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF0A6FB8).withOpacity(0.3),
+                color: const Color(0xFF0A6FB8).withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -1064,7 +1067,7 @@ class _AddReportScreenState extends State<AddReportScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0A6FB8).withOpacity(0.4),
+            color: const Color(0xFF0A6FB8).withValues(alpha: 0.4),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),

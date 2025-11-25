@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_styles.dart';
 
 class AlertManagementScreen extends StatefulWidget {
   const AlertManagementScreen({super.key});
@@ -105,7 +104,7 @@ class _AlertManagementScreenState extends State<AlertManagementScreen> {
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         leading: CircleAvatar(
-          backgroundColor: severityColor.withOpacity(0.2),
+          backgroundColor: severityColor.withValues(alpha: 0.2),
           child: Icon(
             Icons.warning,
             color: severityColor,
@@ -326,7 +325,8 @@ class _AlertManagementScreenState extends State<AlertManagementScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Alert'),
-        content: const Text('Are you sure you want to delete this alert? This action cannot be undone.'),
+        content: const Text(
+            'Are you sure you want to delete this alert? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -230,7 +230,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           Text('${regionalData[index].incidents} incidents'),
                       trailing: Chip(
                         label: Text('${regionalData[index].resolved} resolved'),
-                        backgroundColor: AppColors.success.withOpacity(0.2),
+                        backgroundColor:
+                            AppColors.success.withValues(alpha: 0.2),
                       ),
                     ),
                   ),

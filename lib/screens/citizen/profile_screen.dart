@@ -185,8 +185,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    AppColors.primary.withOpacity(0.9),
-                    AppColors.primary.withOpacity(0.7),
+                    AppColors.primary.withValues(alpha: 0.9),
+                    AppColors.primary.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -204,7 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: 0.3),
                           blurRadius: 15,
                           spreadRadius: 2,
                         ),
@@ -220,7 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ? Icon(
                               Icons.person,
                               size: 60,
-                              color: AppColors.primary.withOpacity(0.7),
+                              color: AppColors.primary.withValues(alpha: 0.7),
                             )
                           : null,
                     ),
@@ -244,7 +244,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   Text(
                     _userProfile!.email,
                     style: AppStyles.bodyMedium.copyWith(
-                      color: AppColors.white.withOpacity(0.9),
+                      color: AppColors.white.withValues(alpha: 0.9),
                     ),
                   ),
 
@@ -261,7 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 borderRadius: BorderRadius.circular(AppStyles.borderRadius),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 10,
                     spreadRadius: 2,
                   ),
@@ -376,7 +376,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(

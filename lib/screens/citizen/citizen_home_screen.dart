@@ -175,7 +175,6 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
                 final locationData = data['location'] as Map<String, dynamic>?;
                 final locationStr =
                     locationData?['address'] ?? 'Unknown Location';
-                final description = data['description'] ?? '';
 
                 return Container(
                   padding: const EdgeInsets.all(16),
@@ -186,7 +185,7 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.red.withOpacity(0.3),
+                        color: Colors.red.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),

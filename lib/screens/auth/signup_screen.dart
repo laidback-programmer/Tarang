@@ -7,7 +7,6 @@ import '../../services/auth_service.dart';
 import '../../widgets/common/loading_indicator.dart';
 import '../../widgets/common/animated_wave_painter.dart';
 import 'login_screen.dart';
-import '../citizen/citizen_home_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   static const String routeName = '/signup';

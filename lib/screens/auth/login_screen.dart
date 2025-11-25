@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_strings.dart';
 import '../../core/constants/app_styles.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/common/loading_indicator.dart';

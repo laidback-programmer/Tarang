@@ -94,8 +94,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  AppColors.primary.withOpacity(0.8),
-                  const Color(0xFF006994).withOpacity(0.9),
+                  AppColors.primary.withValues(alpha: 0.8),
+                  const Color(0xFF006994).withValues(alpha: 0.9),
                 ],
               ),
             ),
@@ -146,7 +146,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
@@ -177,7 +177,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
             'Enter your email address and we\'ll send you\na link to reset your password',
             textAlign: TextAlign.center,
             style: AppStyles.bodyMedium.copyWith(
-              color: AppColors.white.withOpacity(0.8),
+              color: AppColors.white.withValues(alpha: 0.8),
             ),
           ),
 
@@ -193,19 +193,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               hintText: 'Enter your email',
               prefixIcon: Icon(
                 Icons.email_outlined,
-                color: AppColors.white.withOpacity(0.7),
+                color: AppColors.white.withValues(alpha: 0.7),
               ),
-              labelStyle: TextStyle(color: AppColors.white.withOpacity(0.9)),
-              hintStyle: TextStyle(color: AppColors.white.withOpacity(0.5)),
+              labelStyle:
+                  TextStyle(color: AppColors.white.withValues(alpha: 0.9)),
+              hintStyle:
+                  TextStyle(color: AppColors.white.withValues(alpha: 0.5)),
               filled: true,
-              fillColor: AppColors.white.withOpacity(0.2),
+              fillColor: AppColors.white.withValues(alpha: 0.2),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppStyles.borderRadius),
-                borderSide: BorderSide(color: AppColors.white.withOpacity(0.3)),
+                borderSide:
+                    BorderSide(color: AppColors.white.withValues(alpha: 0.3)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppStyles.borderRadius),
-                borderSide: BorderSide(color: AppColors.white.withOpacity(0.3)),
+                borderSide:
+                    BorderSide(color: AppColors.white.withValues(alpha: 0.3)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppStyles.borderRadius),
@@ -277,7 +281,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 20,
                 spreadRadius: 5,
               ),
@@ -308,7 +312,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           'We\'ve sent a password reset link to\n${_emailController.text}',
           textAlign: TextAlign.center,
           style: AppStyles.bodyMedium.copyWith(
-            color: AppColors.white.withOpacity(0.8),
+            color: AppColors.white.withValues(alpha: 0.8),
           ),
         ),
 
@@ -318,7 +322,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           'Please check your inbox and follow the\ninstructions to reset your password',
           textAlign: TextAlign.center,
           style: AppStyles.bodyMedium.copyWith(
-            color: AppColors.white.withOpacity(0.7),
+            color: AppColors.white.withValues(alpha: 0.7),
           ),
         ),
 

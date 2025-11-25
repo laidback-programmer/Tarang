@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_styles.dart';
 
 class ReportsManagementScreen extends StatefulWidget {
   static const String routeName = '/reports-management';
@@ -143,7 +141,7 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -209,7 +207,7 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
     required void Function(String?) onChanged,
   }) {
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       items: items
           .map((item) => DropdownMenuItem(
                 value: item,
@@ -247,7 +245,6 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
     final userName = data['userName'] ?? 'Anonymous';
     final description = data['description'] ?? 'No description';
     final location = data['location'] as Map<String, dynamic>?;
-    final imageUrl = data['imageUrl'] as String?;
     final timestamp = data['createdAt'] as Timestamp?;
 
     return Container(
@@ -257,7 +254,7 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -272,8 +269,8 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  _getDisasterTypeColor(disasterType).withOpacity(0.1),
-                  _getDisasterTypeColor(disasterType).withOpacity(0.05),
+                  _getDisasterTypeColor(disasterType).withValues(alpha: 0.1),
+                  _getDisasterTypeColor(disasterType).withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: const BorderRadius.only(
@@ -286,7 +283,8 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: _getDisasterTypeColor(disasterType).withOpacity(0.2),
+                    color: _getDisasterTypeColor(disasterType)
+                        .withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -498,7 +496,7 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         border: Border.all(color: color, width: 1.5),
         borderRadius: BorderRadius.circular(8),
       ),
@@ -693,7 +691,7 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
                             decoration: BoxDecoration(
                               color: _getDisasterTypeColor(
                                       data['disasterType'] ?? '')
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
@@ -856,7 +854,7 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFF0A6FB8).withOpacity(0.1),
+                color: const Color(0xFF0A6FB8).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.edit, color: Color(0xFF0A6FB8)),
@@ -906,7 +904,7 @@ class _ReportsManagementScreenState extends State<ReportsManagementScreen> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? const Color(0xFF0A6FB8).withOpacity(0.1)
+                          ? const Color(0xFF0A6FB8).withValues(alpha: 0.1)
                           : Colors.white,
                       border: Border.all(
                         color: isSelected

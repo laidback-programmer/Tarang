@@ -5,7 +5,6 @@ import '../../core/utils/role_manager.dart';
 import '../../core/utils/storage_util.dart';
 import '../auth/login_screen.dart';
 import '../auth/official_login_screen.dart';
-import '../official/official_dashboard_screen.dart';
 
 class RoleSelectionScreen extends StatefulWidget {
   static const String routeName = '/role-selection';
@@ -125,7 +124,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
             child: Icon(
               Icons.sailing,
               size: 40,
-              color: AppColors.primary.withOpacity(0.15),
+              color: AppColors.primary.withValues(alpha: 0.15),
             ),
           ),
         ),
@@ -137,7 +136,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
           child: Icon(
             Icons.waves,
             size: 35,
-            color: AppColors.accent.withOpacity(0.12),
+            color: AppColors.accent.withValues(alpha: 0.12),
           ),
         ),
 
@@ -150,7 +149,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
             child: Icon(
               Icons.anchor,
               size: 30,
-              color: AppColors.primaryDark.withOpacity(0.1),
+              color: AppColors.primaryDark.withValues(alpha: 0.1),
             ),
           ),
         ),
@@ -240,7 +239,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.3),
+              color: color.withValues(alpha: 0.3),
               blurRadius: isSelected ? 20 : 15,
               offset: Offset(0, isSelected ? 8 : 6),
             ),
@@ -255,7 +254,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
               child: Icon(
                 Icons.waves,
                 size: 120,
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
 
@@ -282,7 +281,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
                         Text(
                           subtitle,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.95),
+                            color: Colors.white.withValues(alpha: 0.95),
                             fontSize: 14,
                             height: 1.4,
                             fontWeight: FontWeight.w400,
@@ -297,7 +296,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
                     child: Container(
                       height: 110,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Center(
@@ -353,7 +352,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
             borderRadius: BorderRadius.circular(16),
           ),
           elevation: _selectedRole != null ? 4 : 0,
-          shadowColor: Colors.black.withOpacity(0.3),
+          shadowColor: Colors.black.withValues(alpha: 0.3),
         ),
         child: _isLoading
             ? const SizedBox(
@@ -385,7 +384,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
 
   Widget _buildLoadingOverlay() {
     return Container(
-      color: Colors.black.withOpacity(0.4),
+      color: Colors.black.withValues(alpha: 0.4),
       child: Center(
         child: Container(
           padding: const EdgeInsets.all(24),
